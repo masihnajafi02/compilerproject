@@ -1,15 +1,15 @@
-from constants import input_file_name, all_keywords
+from constants import input_file, lang_main_keywords
 from helper import is_number, is_letter, is_white_space, is_symbol, is_slash, is_empty, \
     is_invalid_char_after_numbers, is_invalid_char_after_letters
 from declarations import Token, TokenType
 
-input_file = open(input_file_name, "r", encoding="UTF-8")
+input_file = open(input_file, "r", encoding="UTF-8")
 symbol_table = list()
 lexical_error = dict()
 
 
 def insert_kw_to_symbols():
-    for keyword in all_keywords:
+    for keyword in lang_main_keywords:
         symbol_table.append(keyword)
 
 
@@ -27,9 +27,9 @@ def for_ws_token():
 def for_kw_or_id_token():
     status = read_keyword_or_id()
     if status:
-        if main_read_part not in all_keywords and main_read_part not in symbol_table:
+        if main_read_part not in lang_main_keywords and main_read_part not in symbol_table:
             symbol_table.append(main_read_part)
-        return Token(TokenType.KEYWORD, main_read_part, file_line) if main_read_part in all_keywords \
+        return Token(TokenType.KEYWORD, main_read_part, file_line) if main_read_part in lang_main_keywords \
             else Token(TokenType.ID, main_read_part, file_line)
     return ""
 

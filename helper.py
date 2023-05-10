@@ -1,8 +1,9 @@
-import re
+
 
 
 def is_white_space(char):
-    return re.fullmatch("\s", char) is not None
+    #whitespace chars
+    return char in {' ','\t','\s','\n'}
 
 
 def is_symbol(char):

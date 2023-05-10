@@ -1,5 +1,5 @@
 import os
-from constants import parse_tree_file_name, syntax_error_file_name
+from constants import parse_tree_save_file, syntax_errors_file
 
 
 def compare():
@@ -12,10 +12,10 @@ def compare():
             input_txt = open(test_case_id + "input.txt", "r").read()
             open("input.txt", "w").write(input_txt)
             os.system('py compiler.py')
-            pt = open(test_case_id + parse_tree_file_name, "r").read().strip()
-            se = open(test_case_id + syntax_error_file_name, "r").read().strip()
-            pt_m = open(parse_tree_file_name, "r").read().strip()
-            se_m = open(syntax_error_file_name, "r").read().strip()
+            pt = open(test_case_id + parse_tree_save_file, "r").read().strip()
+            se = open(test_case_id + syntax_errors_file, "r").read().strip()
+            pt_m = open(parse_tree_save_file, "r").read().strip()
+            se_m = open(syntax_errors_file, "r").read().strip()
             print(f"{index}:")
             if pt == pt_m and se == se_m:
                 print("All True")

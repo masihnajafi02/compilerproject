@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Union
 
 
-class Nonterminal(Enum):
+class Nonterminalstates(Enum):
     PROGRAM = "Program"
     DECLARATION_LIST = "Declaration-list"
     DECLARATION = "Declaration"
@@ -79,7 +79,14 @@ class Token:
         return f"({self.type.value}, {self.lexeme})"
 
 
-class T_ID:
+class State:
+    nonterminal: Nonterminalstates
+    state: int
+
+    def __init__(self, nonterminal, state):
+        self.nonterminal = nonterminal
+        self.state = state
+class Token_ID:
     type: TokenType
     lexeme: str
 
@@ -88,34 +95,7 @@ class T_ID:
         self.lexeme = lexeme
 
     def __eq__(self, other):
-        return isinstance(other, T_ID) and self.type == other.type and self.lexeme == other.lexeme
-
-
-class State:
-    nonterminal: Nonterminal
-    state: int
-
-    def __init__(self, nonterminal, state):
-        self.nonterminal = nonterminal
-        self.state = state
-
-
-class Transition:
-    dest_state: int
-    identifier: Union[str, Nonterminal, TokenType, T_ID]
-
-    def __init__(self, dest_state: int, identifier):
-        self.dest_state = dest_state
-        self.identifier = identifier
-
-
-class NTerminalInfo:
-    first: list[str]
-    follow: list[str]
-
-    def __init__(self, first, follow):
-        self.first = first
-        self.follow = follow
+        return isinstance(other, Token_ID) and self.type == other.type and self.lexeme == other.lexeme
 
 
 class Syntax_Error:
@@ -128,3 +108,24 @@ class Syntax_Error:
 
     def __str__(self):
         return f'#{self.line_num} : syntax error, {self.text}'
+    
+
+class Transition:
+    dest_state: int
+    identifier: Union[str, Nonterminalstates, TokenType, Token_ID]
+
+    def __init__(self, dest_state: int, identifier):
+        self.dest_state = dest_state
+        self.identifier = identifier
+
+
+class LanguageRules:
+    first: list[str]
+    follow: list[str]
+
+    def __init__(self, first, follow):
+        self.first = first
+        self.follow = follow
+
+
+

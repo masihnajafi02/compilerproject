@@ -1,16 +1,16 @@
-from declarations import Nonterminal as NT, NTerminalInfo, Transition, TokenType, T_ID
+from declarations import Nonterminalstates as NT, LanguageRules, Transition, TokenType, Token_ID
 
-all_keywords = ['break', 'else', 'if', 'int', 'repeat', 'return', 'until', 'void']
-input_file_name = "input.txt"
-token_file_name = "tokens.txt"
+lang_main_keywords = ['break', 'else', 'if', 'int', 'repeat', 'return', 'until', 'void']
+input_file = "input.txt"
+tokens_file = "tokens.txt"
 lexical_error_file_name = "lexical_errors.txt"
 symbol_table_file_name = "symbol_table.txt"
-parse_tree_file_name = "parse_tree.txt"
-syntax_error_file_name = "syntax_errors.txt"
+parse_tree_save_file = "parse_tree.txt"
+syntax_errors_file = "syntax_errors.txt"
 epsilon = "epsilon"
 
 
-class NTerminalInfo:
+class LanguageRules:
     first: list[str]
     follow: list[str]
 
@@ -19,458 +19,458 @@ class NTerminalInfo:
         self.follow = follow
 
 
-N_TERMINALS_INFO: dict[NT, NTerminalInfo] = {
-    NT.PROGRAM: NTerminalInfo(
+LANG_RULES_INFO: dict[NT, LanguageRules] = {
+    NT.PROGRAM: LanguageRules(
         [
-            T_ID(TokenType.KEYWORD, "int"), T_ID(TokenType.KEYWORD, "void"), epsilon
+            Token_ID(TokenType.KEYWORD, "int"), Token_ID(TokenType.KEYWORD, "void"), epsilon
         ],
         [
-            T_ID(TokenType.EOF, "$")
+            Token_ID(TokenType.EOF, "$")
         ]),
-    NT.DECLARATION_LIST: NTerminalInfo(
+    NT.DECLARATION_LIST: LanguageRules(
         [
-            T_ID(TokenType.KEYWORD, "int"), T_ID(TokenType.KEYWORD, "void"), epsilon
+            Token_ID(TokenType.KEYWORD, "int"), Token_ID(TokenType.KEYWORD, "void"), epsilon
         ],
         [
-            T_ID(TokenType.EOF, "$"), TokenType.ID, T_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
-            T_ID(TokenType.SYMBOL, "("),
-            T_ID(TokenType.SYMBOL, "{"), T_ID(TokenType.SYMBOL, "}"), T_ID(TokenType.KEYWORD, "break"),
-            T_ID(TokenType.KEYWORD, "if"),
-            T_ID(TokenType.KEYWORD, "repeat"), T_ID(TokenType.KEYWORD, "return")
+            Token_ID(TokenType.EOF, "$"), TokenType.ID, Token_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
+            Token_ID(TokenType.SYMBOL, "("),
+            Token_ID(TokenType.SYMBOL, "{"), Token_ID(TokenType.SYMBOL, "}"), Token_ID(TokenType.KEYWORD, "break"),
+            Token_ID(TokenType.KEYWORD, "if"),
+            Token_ID(TokenType.KEYWORD, "repeat"), Token_ID(TokenType.KEYWORD, "return")
         ]
     ),
-    NT.DECLARATION: NTerminalInfo(
+    NT.DECLARATION: LanguageRules(
         [
-            T_ID(TokenType.KEYWORD, "int"), T_ID(TokenType.KEYWORD, "void")
+            Token_ID(TokenType.KEYWORD, "int"), Token_ID(TokenType.KEYWORD, "void")
         ],
         [
-            T_ID(TokenType.EOF, "$"), TokenType.ID, T_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
-            T_ID(TokenType.SYMBOL, "("),
-            T_ID(TokenType.SYMBOL, "{"), T_ID(TokenType.SYMBOL, "}"), T_ID(TokenType.KEYWORD, "break"),
-            T_ID(TokenType.KEYWORD, "if"),
-            T_ID(TokenType.KEYWORD, "repeat"), T_ID(TokenType.KEYWORD, "return"),
-            T_ID(TokenType.KEYWORD, "int"), T_ID(TokenType.KEYWORD, "void")
+            Token_ID(TokenType.EOF, "$"), TokenType.ID, Token_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
+            Token_ID(TokenType.SYMBOL, "("),
+            Token_ID(TokenType.SYMBOL, "{"), Token_ID(TokenType.SYMBOL, "}"), Token_ID(TokenType.KEYWORD, "break"),
+            Token_ID(TokenType.KEYWORD, "if"),
+            Token_ID(TokenType.KEYWORD, "repeat"), Token_ID(TokenType.KEYWORD, "return"),
+            Token_ID(TokenType.KEYWORD, "int"), Token_ID(TokenType.KEYWORD, "void")
         ]
     ),
-    NT.DECLARATION_INITIAL: NTerminalInfo(
+    NT.DECLARATION_INITIAL: LanguageRules(
         [
-            T_ID(TokenType.KEYWORD, "int"), T_ID(TokenType.KEYWORD, "void")
+            Token_ID(TokenType.KEYWORD, "int"), Token_ID(TokenType.KEYWORD, "void")
         ],
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "["), T_ID(TokenType.SYMBOL, "("),
-            T_ID(TokenType.SYMBOL, ")"), T_ID(TokenType.SYMBOL, ",")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "["), Token_ID(TokenType.SYMBOL, "("),
+            Token_ID(TokenType.SYMBOL, ")"), Token_ID(TokenType.SYMBOL, ",")
         ]
     ),
-    NT.DECLARATION_PRIME: NTerminalInfo(
+    NT.DECLARATION_PRIME: LanguageRules(
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "["), T_ID(TokenType.SYMBOL, "(")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "["), Token_ID(TokenType.SYMBOL, "(")
         ],
         [
-            T_ID(TokenType.EOF, "$"), TokenType.ID, T_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
-            T_ID(TokenType.SYMBOL, "("),
-            T_ID(TokenType.SYMBOL, "{"), T_ID(TokenType.SYMBOL, "}"), T_ID(TokenType.KEYWORD, "break"),
-            T_ID(TokenType.KEYWORD, "if"),
-            T_ID(TokenType.KEYWORD, "repeat"), T_ID(TokenType.KEYWORD, "return"),
-            T_ID(TokenType.KEYWORD, "int"), T_ID(TokenType.KEYWORD, "void")
+            Token_ID(TokenType.EOF, "$"), TokenType.ID, Token_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
+            Token_ID(TokenType.SYMBOL, "("),
+            Token_ID(TokenType.SYMBOL, "{"), Token_ID(TokenType.SYMBOL, "}"), Token_ID(TokenType.KEYWORD, "break"),
+            Token_ID(TokenType.KEYWORD, "if"),
+            Token_ID(TokenType.KEYWORD, "repeat"), Token_ID(TokenType.KEYWORD, "return"),
+            Token_ID(TokenType.KEYWORD, "int"), Token_ID(TokenType.KEYWORD, "void")
         ]
     ),
-    NT.VAR_DECLARATION_PRIME: NTerminalInfo(
+    NT.VAR_DECLARATION_PRIME: LanguageRules(
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "[")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "[")
         ],
         [
-            T_ID(TokenType.EOF, "$"), TokenType.ID, T_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
-            T_ID(TokenType.SYMBOL, "("),
-            T_ID(TokenType.SYMBOL, "{"), T_ID(TokenType.SYMBOL, "}"), T_ID(TokenType.KEYWORD, "break"),
-            T_ID(TokenType.KEYWORD, "if"),
-            T_ID(TokenType.KEYWORD, "repeat"), T_ID(TokenType.KEYWORD, "return"),
-            T_ID(TokenType.KEYWORD, "int"), T_ID(TokenType.KEYWORD, "void")
+            Token_ID(TokenType.EOF, "$"), TokenType.ID, Token_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
+            Token_ID(TokenType.SYMBOL, "("),
+            Token_ID(TokenType.SYMBOL, "{"), Token_ID(TokenType.SYMBOL, "}"), Token_ID(TokenType.KEYWORD, "break"),
+            Token_ID(TokenType.KEYWORD, "if"),
+            Token_ID(TokenType.KEYWORD, "repeat"), Token_ID(TokenType.KEYWORD, "return"),
+            Token_ID(TokenType.KEYWORD, "int"), Token_ID(TokenType.KEYWORD, "void")
         ]
     ),
-    NT.FUN_DECLARATION_PRIME: NTerminalInfo(
+    NT.FUN_DECLARATION_PRIME: LanguageRules(
         [
-            T_ID(TokenType.SYMBOL, "(")
+            Token_ID(TokenType.SYMBOL, "(")
         ],
         [
-            T_ID(TokenType.EOF, "$"), TokenType.ID, T_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
-            T_ID(TokenType.SYMBOL, "("),
-            T_ID(TokenType.SYMBOL, "{"), T_ID(TokenType.SYMBOL, "}"), T_ID(TokenType.KEYWORD, "break"),
-            T_ID(TokenType.KEYWORD, "if"),
-            T_ID(TokenType.KEYWORD, "repeat"), T_ID(TokenType.KEYWORD, "return"),
-            T_ID(TokenType.KEYWORD, "int"), T_ID(TokenType.KEYWORD, "void")
+            Token_ID(TokenType.EOF, "$"), TokenType.ID, Token_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
+            Token_ID(TokenType.SYMBOL, "("),
+            Token_ID(TokenType.SYMBOL, "{"), Token_ID(TokenType.SYMBOL, "}"), Token_ID(TokenType.KEYWORD, "break"),
+            Token_ID(TokenType.KEYWORD, "if"),
+            Token_ID(TokenType.KEYWORD, "repeat"), Token_ID(TokenType.KEYWORD, "return"),
+            Token_ID(TokenType.KEYWORD, "int"), Token_ID(TokenType.KEYWORD, "void")
         ]
     ),
-    NT.TYPE_SPECIFIER: NTerminalInfo(
+    NT.TYPE_SPECIFIER: LanguageRules(
         [
-            T_ID(TokenType.KEYWORD, "int"), T_ID(TokenType.KEYWORD, "void")
+            Token_ID(TokenType.KEYWORD, "int"), Token_ID(TokenType.KEYWORD, "void")
         ],
         [
             TokenType.ID
         ]
     ),
-    NT.PARAMS: NTerminalInfo(
+    NT.PARAMS: LanguageRules(
         [
-            T_ID(TokenType.KEYWORD, "int"), T_ID(TokenType.KEYWORD, "void")
+            Token_ID(TokenType.KEYWORD, "int"), Token_ID(TokenType.KEYWORD, "void")
         ],
         [
-            T_ID(TokenType.SYMBOL, ")")
+            Token_ID(TokenType.SYMBOL, ")")
         ]
     ),
-    NT.PARAM_LIST: NTerminalInfo(
+    NT.PARAM_LIST: LanguageRules(
         [
-            T_ID(TokenType.SYMBOL, ","), epsilon
+            Token_ID(TokenType.SYMBOL, ","), epsilon
         ],
         [
-            T_ID(TokenType.SYMBOL, ")")
+            Token_ID(TokenType.SYMBOL, ")")
         ]
     ),
-    NT.PARAM: NTerminalInfo(
+    NT.PARAM: LanguageRules(
         [
-            T_ID(TokenType.KEYWORD, "int"), T_ID(TokenType.KEYWORD, "void")
+            Token_ID(TokenType.KEYWORD, "int"), Token_ID(TokenType.KEYWORD, "void")
         ],
         [
-            T_ID(TokenType.SYMBOL, ")"), T_ID(TokenType.SYMBOL, ",")
+            Token_ID(TokenType.SYMBOL, ")"), Token_ID(TokenType.SYMBOL, ",")
         ]
     ),
-    NT.PARAM_PRIME: NTerminalInfo(
+    NT.PARAM_PRIME: LanguageRules(
         [
-            T_ID(TokenType.SYMBOL, "["), epsilon
+            Token_ID(TokenType.SYMBOL, "["), epsilon
         ],
         [
-            T_ID(TokenType.SYMBOL, ")"), T_ID(TokenType.SYMBOL, ",")
+            Token_ID(TokenType.SYMBOL, ")"), Token_ID(TokenType.SYMBOL, ",")
         ]
     ),
-    NT.COMPOUND_STMT: NTerminalInfo(
+    NT.COMPOUND_STMT: LanguageRules(
         [
-            T_ID(TokenType.SYMBOL, "{")
+            Token_ID(TokenType.SYMBOL, "{")
         ],
         [
-            T_ID(TokenType.EOF, "$"), TokenType.ID, T_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
-            T_ID(TokenType.SYMBOL, "("),
-            T_ID(TokenType.SYMBOL, "{"), T_ID(TokenType.SYMBOL, "}"), T_ID(TokenType.KEYWORD, "break"),
-            T_ID(TokenType.KEYWORD, "if"),
-            T_ID(TokenType.KEYWORD, "repeat"), T_ID(TokenType.KEYWORD, "return"),
-            T_ID(TokenType.KEYWORD, "int"), T_ID(TokenType.KEYWORD, "void"),
-            T_ID(TokenType.KEYWORD, "else"), T_ID(TokenType.KEYWORD, "until")
+            Token_ID(TokenType.EOF, "$"), TokenType.ID, Token_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
+            Token_ID(TokenType.SYMBOL, "("),
+            Token_ID(TokenType.SYMBOL, "{"), Token_ID(TokenType.SYMBOL, "}"), Token_ID(TokenType.KEYWORD, "break"),
+            Token_ID(TokenType.KEYWORD, "if"),
+            Token_ID(TokenType.KEYWORD, "repeat"), Token_ID(TokenType.KEYWORD, "return"),
+            Token_ID(TokenType.KEYWORD, "int"), Token_ID(TokenType.KEYWORD, "void"),
+            Token_ID(TokenType.KEYWORD, "else"), Token_ID(TokenType.KEYWORD, "until")
         ]
     ),
-    NT.STATEMENT_LIST: NTerminalInfo(
+    NT.STATEMENT_LIST: LanguageRules(
         [
-            TokenType.ID, T_ID(TokenType.SYMBOL, ";"), TokenType.NUM, T_ID(TokenType.SYMBOL, "("),
-            T_ID(TokenType.SYMBOL, "{"), T_ID(TokenType.KEYWORD, "break"), T_ID(TokenType.KEYWORD, "if"),
-            T_ID(TokenType.KEYWORD, "repeat"), T_ID(TokenType.KEYWORD, "return"), epsilon
+            TokenType.ID, Token_ID(TokenType.SYMBOL, ";"), TokenType.NUM, Token_ID(TokenType.SYMBOL, "("),
+            Token_ID(TokenType.SYMBOL, "{"), Token_ID(TokenType.KEYWORD, "break"), Token_ID(TokenType.KEYWORD, "if"),
+            Token_ID(TokenType.KEYWORD, "repeat"), Token_ID(TokenType.KEYWORD, "return"), epsilon
         ],
         [
-            T_ID(TokenType.SYMBOL, "}")
+            Token_ID(TokenType.SYMBOL, "}")
         ]
     ),
-    NT.STATEMENT: NTerminalInfo(
+    NT.STATEMENT: LanguageRules(
         [
-            TokenType.ID, T_ID(TokenType.SYMBOL, ";"), TokenType.NUM, T_ID(TokenType.SYMBOL, "("),
-            T_ID(TokenType.SYMBOL, "{"), T_ID(TokenType.KEYWORD, "break"), T_ID(TokenType.KEYWORD, "if"),
-            T_ID(TokenType.KEYWORD, "repeat"), T_ID(TokenType.KEYWORD, "return")
+            TokenType.ID, Token_ID(TokenType.SYMBOL, ";"), TokenType.NUM, Token_ID(TokenType.SYMBOL, "("),
+            Token_ID(TokenType.SYMBOL, "{"), Token_ID(TokenType.KEYWORD, "break"), Token_ID(TokenType.KEYWORD, "if"),
+            Token_ID(TokenType.KEYWORD, "repeat"), Token_ID(TokenType.KEYWORD, "return")
         ],
         [
-            TokenType.ID, T_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
-            T_ID(TokenType.SYMBOL, "("),
-            T_ID(TokenType.SYMBOL, "{"), T_ID(TokenType.SYMBOL, "}"), T_ID(TokenType.KEYWORD, "break"),
-            T_ID(TokenType.KEYWORD, "if"),
-            T_ID(TokenType.KEYWORD, "repeat"), T_ID(TokenType.KEYWORD, "return"),
-            T_ID(TokenType.KEYWORD, "else"), T_ID(TokenType.KEYWORD, "until")
+            TokenType.ID, Token_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
+            Token_ID(TokenType.SYMBOL, "("),
+            Token_ID(TokenType.SYMBOL, "{"), Token_ID(TokenType.SYMBOL, "}"), Token_ID(TokenType.KEYWORD, "break"),
+            Token_ID(TokenType.KEYWORD, "if"),
+            Token_ID(TokenType.KEYWORD, "repeat"), Token_ID(TokenType.KEYWORD, "return"),
+            Token_ID(TokenType.KEYWORD, "else"), Token_ID(TokenType.KEYWORD, "until")
         ]
     ),
-    NT.EXPRESSION_STMT: NTerminalInfo(
+    NT.EXPRESSION_STMT: LanguageRules(
         [
-            TokenType.ID, T_ID(TokenType.SYMBOL, ";"), TokenType.NUM, T_ID(TokenType.SYMBOL, "("),
-            T_ID(TokenType.KEYWORD, "break")
+            TokenType.ID, Token_ID(TokenType.SYMBOL, ";"), TokenType.NUM, Token_ID(TokenType.SYMBOL, "("),
+            Token_ID(TokenType.KEYWORD, "break")
         ],
         [
-            TokenType.ID, T_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
-            T_ID(TokenType.SYMBOL, "("),
-            T_ID(TokenType.SYMBOL, "{"), T_ID(TokenType.SYMBOL, "}"), T_ID(TokenType.KEYWORD, "break"),
-            T_ID(TokenType.KEYWORD, "if"),
-            T_ID(TokenType.KEYWORD, "repeat"), T_ID(TokenType.KEYWORD, "return"),
-            T_ID(TokenType.KEYWORD, "else"), T_ID(TokenType.KEYWORD, "until")
+            TokenType.ID, Token_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
+            Token_ID(TokenType.SYMBOL, "("),
+            Token_ID(TokenType.SYMBOL, "{"), Token_ID(TokenType.SYMBOL, "}"), Token_ID(TokenType.KEYWORD, "break"),
+            Token_ID(TokenType.KEYWORD, "if"),
+            Token_ID(TokenType.KEYWORD, "repeat"), Token_ID(TokenType.KEYWORD, "return"),
+            Token_ID(TokenType.KEYWORD, "else"), Token_ID(TokenType.KEYWORD, "until")
         ]
     ),
-    NT.SELECTION_STMT: NTerminalInfo(
+    NT.SELECTION_STMT: LanguageRules(
         [
-            T_ID(TokenType.KEYWORD, "if")
+            Token_ID(TokenType.KEYWORD, "if")
         ],
         [
-            TokenType.ID, T_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
-            T_ID(TokenType.SYMBOL, "("),
-            T_ID(TokenType.SYMBOL, "{"), T_ID(TokenType.SYMBOL, "}"), T_ID(TokenType.KEYWORD, "break"),
-            T_ID(TokenType.KEYWORD, "if"),
-            T_ID(TokenType.KEYWORD, "repeat"), T_ID(TokenType.KEYWORD, "return"),
-            T_ID(TokenType.KEYWORD, "else"), T_ID(TokenType.KEYWORD, "until")
+            TokenType.ID, Token_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
+            Token_ID(TokenType.SYMBOL, "("),
+            Token_ID(TokenType.SYMBOL, "{"), Token_ID(TokenType.SYMBOL, "}"), Token_ID(TokenType.KEYWORD, "break"),
+            Token_ID(TokenType.KEYWORD, "if"),
+            Token_ID(TokenType.KEYWORD, "repeat"), Token_ID(TokenType.KEYWORD, "return"),
+            Token_ID(TokenType.KEYWORD, "else"), Token_ID(TokenType.KEYWORD, "until")
         ]
     ),
-    NT.ITERATION_STMT: NTerminalInfo(
+    NT.ITERATION_STMT: LanguageRules(
         [
-            T_ID(TokenType.KEYWORD, "repeat")
+            Token_ID(TokenType.KEYWORD, "repeat")
         ],
         [
-            TokenType.ID, T_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
-            T_ID(TokenType.SYMBOL, "("),
-            T_ID(TokenType.SYMBOL, "{"), T_ID(TokenType.SYMBOL, "}"), T_ID(TokenType.KEYWORD, "break"),
-            T_ID(TokenType.KEYWORD, "if"),
-            T_ID(TokenType.KEYWORD, "repeat"), T_ID(TokenType.KEYWORD, "return"),
-            T_ID(TokenType.KEYWORD, "else"), T_ID(TokenType.KEYWORD, "until")
+            TokenType.ID, Token_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
+            Token_ID(TokenType.SYMBOL, "("),
+            Token_ID(TokenType.SYMBOL, "{"), Token_ID(TokenType.SYMBOL, "}"), Token_ID(TokenType.KEYWORD, "break"),
+            Token_ID(TokenType.KEYWORD, "if"),
+            Token_ID(TokenType.KEYWORD, "repeat"), Token_ID(TokenType.KEYWORD, "return"),
+            Token_ID(TokenType.KEYWORD, "else"), Token_ID(TokenType.KEYWORD, "until")
         ]
     ),
-    NT.RETURN_STMT: NTerminalInfo(
+    NT.RETURN_STMT: LanguageRules(
         [
-            T_ID(TokenType.KEYWORD, "return")
+            Token_ID(TokenType.KEYWORD, "return")
         ],
         [
-            TokenType.ID, T_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
-            T_ID(TokenType.SYMBOL, "("),
-            T_ID(TokenType.SYMBOL, "{"), T_ID(TokenType.SYMBOL, "}"), T_ID(TokenType.KEYWORD, "break"),
-            T_ID(TokenType.KEYWORD, "if"),
-            T_ID(TokenType.KEYWORD, "repeat"), T_ID(TokenType.KEYWORD, "return"),
-            T_ID(TokenType.KEYWORD, "else"), T_ID(TokenType.KEYWORD, "until")
+            TokenType.ID, Token_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
+            Token_ID(TokenType.SYMBOL, "("),
+            Token_ID(TokenType.SYMBOL, "{"), Token_ID(TokenType.SYMBOL, "}"), Token_ID(TokenType.KEYWORD, "break"),
+            Token_ID(TokenType.KEYWORD, "if"),
+            Token_ID(TokenType.KEYWORD, "repeat"), Token_ID(TokenType.KEYWORD, "return"),
+            Token_ID(TokenType.KEYWORD, "else"), Token_ID(TokenType.KEYWORD, "until")
         ]
     ),
-    NT.RETURN_STMT_PRIME: NTerminalInfo(
+    NT.RETURN_STMT_PRIME: LanguageRules(
         [
-            TokenType.ID, T_ID(TokenType.SYMBOL, ";"), TokenType.NUM, T_ID(TokenType.SYMBOL, "(")
+            TokenType.ID, Token_ID(TokenType.SYMBOL, ";"), TokenType.NUM, Token_ID(TokenType.SYMBOL, "(")
         ],
         [
-            TokenType.ID, T_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
-            T_ID(TokenType.SYMBOL, "("),
-            T_ID(TokenType.SYMBOL, "{"), T_ID(TokenType.SYMBOL, "}"), T_ID(TokenType.KEYWORD, "break"),
-            T_ID(TokenType.KEYWORD, "if"),
-            T_ID(TokenType.KEYWORD, "repeat"), T_ID(TokenType.KEYWORD, "return"),
-            T_ID(TokenType.KEYWORD, "else"), T_ID(TokenType.KEYWORD, "until")
+            TokenType.ID, Token_ID(TokenType.SYMBOL, ";"), TokenType.NUM,
+            Token_ID(TokenType.SYMBOL, "("),
+            Token_ID(TokenType.SYMBOL, "{"), Token_ID(TokenType.SYMBOL, "}"), Token_ID(TokenType.KEYWORD, "break"),
+            Token_ID(TokenType.KEYWORD, "if"),
+            Token_ID(TokenType.KEYWORD, "repeat"), Token_ID(TokenType.KEYWORD, "return"),
+            Token_ID(TokenType.KEYWORD, "else"), Token_ID(TokenType.KEYWORD, "until")
         ]
     ),
-    NT.EXPRESSION: NTerminalInfo(
+    NT.EXPRESSION: LanguageRules(
         [
-            TokenType.ID, TokenType.NUM, T_ID(TokenType.SYMBOL, "(")
+            TokenType.ID, TokenType.NUM, Token_ID(TokenType.SYMBOL, "(")
         ],
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "]"), T_ID(TokenType.SYMBOL, ")"),
-            T_ID(TokenType.SYMBOL, ",")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "]"), Token_ID(TokenType.SYMBOL, ")"),
+            Token_ID(TokenType.SYMBOL, ",")
         ]
     ),
-    NT.B: NTerminalInfo(
+    NT.B: LanguageRules(
         [
-            T_ID(TokenType.SYMBOL, "["), T_ID(TokenType.SYMBOL, "("), T_ID(TokenType.SYMBOL, "="),
-            T_ID(TokenType.SYMBOL, "<"), T_ID(TokenType.SYMBOL, "=="), T_ID(TokenType.SYMBOL, "+"),
-            T_ID(TokenType.SYMBOL, "-"), T_ID(TokenType.SYMBOL, "*"), epsilon
+            Token_ID(TokenType.SYMBOL, "["), Token_ID(TokenType.SYMBOL, "("), Token_ID(TokenType.SYMBOL, "="),
+            Token_ID(TokenType.SYMBOL, "<"), Token_ID(TokenType.SYMBOL, "=="), Token_ID(TokenType.SYMBOL, "+"),
+            Token_ID(TokenType.SYMBOL, "-"), Token_ID(TokenType.SYMBOL, "*"), epsilon
         ],
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "]"), T_ID(TokenType.SYMBOL, ")"),
-            T_ID(TokenType.SYMBOL, ",")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "]"), Token_ID(TokenType.SYMBOL, ")"),
+            Token_ID(TokenType.SYMBOL, ",")
         ]
     ),
-    NT.H: NTerminalInfo(
+    NT.H: LanguageRules(
         [
-            T_ID(TokenType.SYMBOL, "="),
-            T_ID(TokenType.SYMBOL, "<"), T_ID(TokenType.SYMBOL, "=="), T_ID(TokenType.SYMBOL, "+"),
-            T_ID(TokenType.SYMBOL, "-"), T_ID(TokenType.SYMBOL, "*"), epsilon
+            Token_ID(TokenType.SYMBOL, "="),
+            Token_ID(TokenType.SYMBOL, "<"), Token_ID(TokenType.SYMBOL, "=="), Token_ID(TokenType.SYMBOL, "+"),
+            Token_ID(TokenType.SYMBOL, "-"), Token_ID(TokenType.SYMBOL, "*"), epsilon
         ],
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "]"), T_ID(TokenType.SYMBOL, ")"),
-            T_ID(TokenType.SYMBOL, ",")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "]"), Token_ID(TokenType.SYMBOL, ")"),
+            Token_ID(TokenType.SYMBOL, ",")
         ]
     ),
-    NT.SIMPLE_EXPRESSION_ZEGOND: NTerminalInfo(
+    NT.SIMPLE_EXPRESSION_ZEGOND: LanguageRules(
         [
-            TokenType.NUM, T_ID(TokenType.SYMBOL, "(")
+            TokenType.NUM, Token_ID(TokenType.SYMBOL, "(")
         ],
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "]"), T_ID(TokenType.SYMBOL, ")"),
-            T_ID(TokenType.SYMBOL, ",")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "]"), Token_ID(TokenType.SYMBOL, ")"),
+            Token_ID(TokenType.SYMBOL, ",")
         ]
     ),
-    NT.SIMPLE_EXPRESSION_PRIME: NTerminalInfo(
+    NT.SIMPLE_EXPRESSION_PRIME: LanguageRules(
         [
-            T_ID(TokenType.SYMBOL, "("),
-            T_ID(TokenType.SYMBOL, "<"), T_ID(TokenType.SYMBOL, "=="), T_ID(TokenType.SYMBOL, "+"),
-            T_ID(TokenType.SYMBOL, "-"), T_ID(TokenType.SYMBOL, "*"), epsilon
+            Token_ID(TokenType.SYMBOL, "("),
+            Token_ID(TokenType.SYMBOL, "<"), Token_ID(TokenType.SYMBOL, "=="), Token_ID(TokenType.SYMBOL, "+"),
+            Token_ID(TokenType.SYMBOL, "-"), Token_ID(TokenType.SYMBOL, "*"), epsilon
         ],
         [
 
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "]"), T_ID(TokenType.SYMBOL, ")"),
-            T_ID(TokenType.SYMBOL, ",")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "]"), Token_ID(TokenType.SYMBOL, ")"),
+            Token_ID(TokenType.SYMBOL, ",")
         ]
     ),
-    NT.C: NTerminalInfo(
+    NT.C: LanguageRules(
         [
-            T_ID(TokenType.SYMBOL, "<"), T_ID(TokenType.SYMBOL, "=="), epsilon
+            Token_ID(TokenType.SYMBOL, "<"), Token_ID(TokenType.SYMBOL, "=="), epsilon
         ],
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "]"), T_ID(TokenType.SYMBOL, ")"),
-            T_ID(TokenType.SYMBOL, ",")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "]"), Token_ID(TokenType.SYMBOL, ")"),
+            Token_ID(TokenType.SYMBOL, ",")
         ]
     ),
-    NT.RELOP: NTerminalInfo(
+    NT.RELOP: LanguageRules(
         [
-            T_ID(TokenType.SYMBOL, "<"), T_ID(TokenType.SYMBOL, "==")
+            Token_ID(TokenType.SYMBOL, "<"), Token_ID(TokenType.SYMBOL, "==")
         ],
         [
-            TokenType.ID, TokenType.NUM, T_ID(TokenType.SYMBOL, "(")
+            TokenType.ID, TokenType.NUM, Token_ID(TokenType.SYMBOL, "(")
         ]
     ),
-    NT.ADDITIVE_EXPRESSION: NTerminalInfo(
+    NT.ADDITIVE_EXPRESSION: LanguageRules(
         [
-            TokenType.ID, TokenType.NUM, T_ID(TokenType.SYMBOL, "(")
+            TokenType.ID, TokenType.NUM, Token_ID(TokenType.SYMBOL, "(")
         ],
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "]"), T_ID(TokenType.SYMBOL, ")"),
-            T_ID(TokenType.SYMBOL, ",")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "]"), Token_ID(TokenType.SYMBOL, ")"),
+            Token_ID(TokenType.SYMBOL, ",")
         ]
     ),
-    NT.ADDITIVE_EXPRESSION_PRIME: NTerminalInfo(
+    NT.ADDITIVE_EXPRESSION_PRIME: LanguageRules(
         [
-            T_ID(TokenType.SYMBOL, "("), T_ID(TokenType.SYMBOL, "+"),
-            T_ID(TokenType.SYMBOL, "-"), T_ID(TokenType.SYMBOL, "*"), epsilon
+            Token_ID(TokenType.SYMBOL, "("), Token_ID(TokenType.SYMBOL, "+"),
+            Token_ID(TokenType.SYMBOL, "-"), Token_ID(TokenType.SYMBOL, "*"), epsilon
         ],
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "]"), T_ID(TokenType.SYMBOL, ")"),
-            T_ID(TokenType.SYMBOL, ","), T_ID(TokenType.SYMBOL, "<"), T_ID(TokenType.SYMBOL, "==")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "]"), Token_ID(TokenType.SYMBOL, ")"),
+            Token_ID(TokenType.SYMBOL, ","), Token_ID(TokenType.SYMBOL, "<"), Token_ID(TokenType.SYMBOL, "==")
         ]
     ),
-    NT.ADDITIVE_EXPRESSION_ZEGOND: NTerminalInfo(
+    NT.ADDITIVE_EXPRESSION_ZEGOND: LanguageRules(
         [
-            TokenType.NUM, T_ID(TokenType.SYMBOL, "(")
+            TokenType.NUM, Token_ID(TokenType.SYMBOL, "(")
         ],
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "]"), T_ID(TokenType.SYMBOL, ")"),
-            T_ID(TokenType.SYMBOL, ","), T_ID(TokenType.SYMBOL, "<"), T_ID(TokenType.SYMBOL, "==")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "]"), Token_ID(TokenType.SYMBOL, ")"),
+            Token_ID(TokenType.SYMBOL, ","), Token_ID(TokenType.SYMBOL, "<"), Token_ID(TokenType.SYMBOL, "==")
         ]
     ),
-    NT.D: NTerminalInfo(
+    NT.D: LanguageRules(
         [
-            T_ID(TokenType.SYMBOL, "+"), T_ID(TokenType.SYMBOL, "-"), epsilon
+            Token_ID(TokenType.SYMBOL, "+"), Token_ID(TokenType.SYMBOL, "-"), epsilon
         ],
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "]"), T_ID(TokenType.SYMBOL, ")"),
-            T_ID(TokenType.SYMBOL, ","), T_ID(TokenType.SYMBOL, "<"), T_ID(TokenType.SYMBOL, "==")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "]"), Token_ID(TokenType.SYMBOL, ")"),
+            Token_ID(TokenType.SYMBOL, ","), Token_ID(TokenType.SYMBOL, "<"), Token_ID(TokenType.SYMBOL, "==")
         ]
     ),
-    NT.ADDOP: NTerminalInfo(
+    NT.ADDOP: LanguageRules(
         [
-            T_ID(TokenType.SYMBOL, "+"), T_ID(TokenType.SYMBOL, "-")
+            Token_ID(TokenType.SYMBOL, "+"), Token_ID(TokenType.SYMBOL, "-")
         ],
         [
-            TokenType.ID, TokenType.NUM, T_ID(TokenType.SYMBOL, "(")
+            TokenType.ID, TokenType.NUM, Token_ID(TokenType.SYMBOL, "(")
         ]
     ),
-    NT.TERM: NTerminalInfo(
+    NT.TERM: LanguageRules(
         [
-            TokenType.ID, TokenType.NUM, T_ID(TokenType.SYMBOL, "(")
+            TokenType.ID, TokenType.NUM, Token_ID(TokenType.SYMBOL, "(")
         ],
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "]"), T_ID(TokenType.SYMBOL, ")"),
-            T_ID(TokenType.SYMBOL, ","), T_ID(TokenType.SYMBOL, "<"), T_ID(TokenType.SYMBOL, "=="),
-            T_ID(TokenType.SYMBOL, "+"), T_ID(TokenType.SYMBOL, "-")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "]"), Token_ID(TokenType.SYMBOL, ")"),
+            Token_ID(TokenType.SYMBOL, ","), Token_ID(TokenType.SYMBOL, "<"), Token_ID(TokenType.SYMBOL, "=="),
+            Token_ID(TokenType.SYMBOL, "+"), Token_ID(TokenType.SYMBOL, "-")
         ]
     ),
-    NT.TERM_PRIME: NTerminalInfo(
+    NT.TERM_PRIME: LanguageRules(
         [
-            T_ID(TokenType.SYMBOL, "("), T_ID(TokenType.SYMBOL, "*"), epsilon
+            Token_ID(TokenType.SYMBOL, "("), Token_ID(TokenType.SYMBOL, "*"), epsilon
         ],
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "]"), T_ID(TokenType.SYMBOL, ")"),
-            T_ID(TokenType.SYMBOL, ","), T_ID(TokenType.SYMBOL, "<"), T_ID(TokenType.SYMBOL, "=="),
-            T_ID(TokenType.SYMBOL, "+"), T_ID(TokenType.SYMBOL, "-")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "]"), Token_ID(TokenType.SYMBOL, ")"),
+            Token_ID(TokenType.SYMBOL, ","), Token_ID(TokenType.SYMBOL, "<"), Token_ID(TokenType.SYMBOL, "=="),
+            Token_ID(TokenType.SYMBOL, "+"), Token_ID(TokenType.SYMBOL, "-")
         ]
     ),
-    NT.TERM_ZEGOND: NTerminalInfo(
+    NT.TERM_ZEGOND: LanguageRules(
         [
-            TokenType.NUM, T_ID(TokenType.SYMBOL, "(")
+            TokenType.NUM, Token_ID(TokenType.SYMBOL, "(")
         ],
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "]"), T_ID(TokenType.SYMBOL, ")"),
-            T_ID(TokenType.SYMBOL, ","), T_ID(TokenType.SYMBOL, "<"), T_ID(TokenType.SYMBOL, "=="),
-            T_ID(TokenType.SYMBOL, "+"), T_ID(TokenType.SYMBOL, "-")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "]"), Token_ID(TokenType.SYMBOL, ")"),
+            Token_ID(TokenType.SYMBOL, ","), Token_ID(TokenType.SYMBOL, "<"), Token_ID(TokenType.SYMBOL, "=="),
+            Token_ID(TokenType.SYMBOL, "+"), Token_ID(TokenType.SYMBOL, "-")
         ]
     ),
-    NT.G: NTerminalInfo(
+    NT.G: LanguageRules(
         [
-            T_ID(TokenType.SYMBOL, "*"), epsilon
+            Token_ID(TokenType.SYMBOL, "*"), epsilon
         ],
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "]"), T_ID(TokenType.SYMBOL, ")"),
-            T_ID(TokenType.SYMBOL, ","), T_ID(TokenType.SYMBOL, "<"), T_ID(TokenType.SYMBOL, "=="),
-            T_ID(TokenType.SYMBOL, "+"), T_ID(TokenType.SYMBOL, "-")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "]"), Token_ID(TokenType.SYMBOL, ")"),
+            Token_ID(TokenType.SYMBOL, ","), Token_ID(TokenType.SYMBOL, "<"), Token_ID(TokenType.SYMBOL, "=="),
+            Token_ID(TokenType.SYMBOL, "+"), Token_ID(TokenType.SYMBOL, "-")
         ]
     ),
-    NT.FACTOR: NTerminalInfo(
+    NT.FACTOR: LanguageRules(
         [
-            TokenType.ID, TokenType.NUM, T_ID(TokenType.SYMBOL, "(")
+            TokenType.ID, TokenType.NUM, Token_ID(TokenType.SYMBOL, "(")
         ],
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "]"), T_ID(TokenType.SYMBOL, ")"),
-            T_ID(TokenType.SYMBOL, ","), T_ID(TokenType.SYMBOL, "<"), T_ID(TokenType.SYMBOL, "=="),
-            T_ID(TokenType.SYMBOL, "+"), T_ID(TokenType.SYMBOL, "-"), T_ID(TokenType.SYMBOL, "*")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "]"), Token_ID(TokenType.SYMBOL, ")"),
+            Token_ID(TokenType.SYMBOL, ","), Token_ID(TokenType.SYMBOL, "<"), Token_ID(TokenType.SYMBOL, "=="),
+            Token_ID(TokenType.SYMBOL, "+"), Token_ID(TokenType.SYMBOL, "-"), Token_ID(TokenType.SYMBOL, "*")
         ]
     ),
-    NT.VAR_CALL_PRIME: NTerminalInfo(
+    NT.VAR_CALL_PRIME: LanguageRules(
         [
-            T_ID(TokenType.SYMBOL, "["), T_ID(TokenType.SYMBOL, "("), epsilon
+            Token_ID(TokenType.SYMBOL, "["), Token_ID(TokenType.SYMBOL, "("), epsilon
         ],
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "]"), T_ID(TokenType.SYMBOL, ")"),
-            T_ID(TokenType.SYMBOL, ","), T_ID(TokenType.SYMBOL, "<"), T_ID(TokenType.SYMBOL, "=="),
-            T_ID(TokenType.SYMBOL, "+"), T_ID(TokenType.SYMBOL, "-"), T_ID(TokenType.SYMBOL, "*")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "]"), Token_ID(TokenType.SYMBOL, ")"),
+            Token_ID(TokenType.SYMBOL, ","), Token_ID(TokenType.SYMBOL, "<"), Token_ID(TokenType.SYMBOL, "=="),
+            Token_ID(TokenType.SYMBOL, "+"), Token_ID(TokenType.SYMBOL, "-"), Token_ID(TokenType.SYMBOL, "*")
         ]
     ),
-    NT.VAR_PRIME: NTerminalInfo(
+    NT.VAR_PRIME: LanguageRules(
         [
-            T_ID(TokenType.SYMBOL, "["), epsilon
+            Token_ID(TokenType.SYMBOL, "["), epsilon
         ],
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "]"), T_ID(TokenType.SYMBOL, ")"),
-            T_ID(TokenType.SYMBOL, ","), T_ID(TokenType.SYMBOL, "<"), T_ID(TokenType.SYMBOL, "=="),
-            T_ID(TokenType.SYMBOL, "+"), T_ID(TokenType.SYMBOL, "-"), T_ID(TokenType.SYMBOL, "*")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "]"), Token_ID(TokenType.SYMBOL, ")"),
+            Token_ID(TokenType.SYMBOL, ","), Token_ID(TokenType.SYMBOL, "<"), Token_ID(TokenType.SYMBOL, "=="),
+            Token_ID(TokenType.SYMBOL, "+"), Token_ID(TokenType.SYMBOL, "-"), Token_ID(TokenType.SYMBOL, "*")
         ]
     ),
-    NT.FACTOR_PRIME: NTerminalInfo(
+    NT.FACTOR_PRIME: LanguageRules(
         [
-            T_ID(TokenType.SYMBOL, "("), epsilon
+            Token_ID(TokenType.SYMBOL, "("), epsilon
         ],
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "]"), T_ID(TokenType.SYMBOL, ")"),
-            T_ID(TokenType.SYMBOL, ","), T_ID(TokenType.SYMBOL, "<"), T_ID(TokenType.SYMBOL, "=="),
-            T_ID(TokenType.SYMBOL, "+"), T_ID(TokenType.SYMBOL, "-"), T_ID(TokenType.SYMBOL, "*")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "]"), Token_ID(TokenType.SYMBOL, ")"),
+            Token_ID(TokenType.SYMBOL, ","), Token_ID(TokenType.SYMBOL, "<"), Token_ID(TokenType.SYMBOL, "=="),
+            Token_ID(TokenType.SYMBOL, "+"), Token_ID(TokenType.SYMBOL, "-"), Token_ID(TokenType.SYMBOL, "*")
         ]
     ),
-    NT.FACTOR_ZEGOND: NTerminalInfo(
+    NT.FACTOR_ZEGOND: LanguageRules(
         [
-            TokenType.NUM, T_ID(TokenType.SYMBOL, "(")
+            TokenType.NUM, Token_ID(TokenType.SYMBOL, "(")
         ],
         [
-            T_ID(TokenType.SYMBOL, ";"), T_ID(TokenType.SYMBOL, "]"), T_ID(TokenType.SYMBOL, ")"),
-            T_ID(TokenType.SYMBOL, ","), T_ID(TokenType.SYMBOL, "<"), T_ID(TokenType.SYMBOL, "=="),
-            T_ID(TokenType.SYMBOL, "+"), T_ID(TokenType.SYMBOL, "-"), T_ID(TokenType.SYMBOL, "*")
+            Token_ID(TokenType.SYMBOL, ";"), Token_ID(TokenType.SYMBOL, "]"), Token_ID(TokenType.SYMBOL, ")"),
+            Token_ID(TokenType.SYMBOL, ","), Token_ID(TokenType.SYMBOL, "<"), Token_ID(TokenType.SYMBOL, "=="),
+            Token_ID(TokenType.SYMBOL, "+"), Token_ID(TokenType.SYMBOL, "-"), Token_ID(TokenType.SYMBOL, "*")
         ]
     ),
-    NT.ARGS: NTerminalInfo(
+    NT.ARGS: LanguageRules(
         [
-            TokenType.ID, TokenType.NUM, T_ID(TokenType.SYMBOL, "("), epsilon
+            TokenType.ID, TokenType.NUM, Token_ID(TokenType.SYMBOL, "("), epsilon
         ],
         [
-            T_ID(TokenType.SYMBOL, ")")
+            Token_ID(TokenType.SYMBOL, ")")
         ]
     ),
-    NT.ARG_LIST: NTerminalInfo(
+    NT.ARG_LIST: LanguageRules(
         [
-            TokenType.ID, TokenType.NUM, T_ID(TokenType.SYMBOL, "(")
+            TokenType.ID, TokenType.NUM, Token_ID(TokenType.SYMBOL, "(")
         ],
         [
-            T_ID(TokenType.SYMBOL, ")")
+            Token_ID(TokenType.SYMBOL, ")")
         ]
     ),
-    NT.ARG_LIST_PRIME: NTerminalInfo(
+    NT.ARG_LIST_PRIME: LanguageRules(
         [
-            T_ID(TokenType.SYMBOL, ","), epsilon
+            Token_ID(TokenType.SYMBOL, ","), epsilon
         ],
         [
-            T_ID(TokenType.SYMBOL, ")")
+            Token_ID(TokenType.SYMBOL, ")")
         ]
     ),
 }
@@ -478,7 +478,7 @@ N_TERMINALS_INFO: dict[NT, NTerminalInfo] = {
 T_DIAGRAMS: dict[NT, list[list[Transition]]] = {
     NT.PROGRAM: [
         [Transition(1, NT.DECLARATION_LIST)],
-        [Transition(2, T_ID(TokenType.EOF, "$"))],
+        [Transition(2, Token_ID(TokenType.EOF, "$"))],
     ],
     NT.DECLARATION_LIST: [
         [Transition(1, NT.DECLARATION), Transition(2, epsilon)],
@@ -496,28 +496,28 @@ T_DIAGRAMS: dict[NT, list[list[Transition]]] = {
         [Transition(1, NT.FUN_DECLARATION_PRIME), Transition(1, NT.VAR_DECLARATION_PRIME)],
     ],
     NT.VAR_DECLARATION_PRIME: [
-        [Transition(1, T_ID(TokenType.SYMBOL, "[")), Transition(4, T_ID(TokenType.SYMBOL, ";"))],
+        [Transition(1, Token_ID(TokenType.SYMBOL, "[")), Transition(4, Token_ID(TokenType.SYMBOL, ";"))],
         [Transition(2, TokenType.NUM)],
-        [Transition(3, T_ID(TokenType.SYMBOL, "]"))],
-        [Transition(4, T_ID(TokenType.SYMBOL, ";"))],
+        [Transition(3, Token_ID(TokenType.SYMBOL, "]"))],
+        [Transition(4, Token_ID(TokenType.SYMBOL, ";"))],
     ],
     NT.FUN_DECLARATION_PRIME: [
-        [Transition(1, T_ID(TokenType.SYMBOL, "("))],
+        [Transition(1, Token_ID(TokenType.SYMBOL, "("))],
         [Transition(2, NT.PARAMS)],
-        [Transition(3, T_ID(TokenType.SYMBOL, ")"))],
+        [Transition(3, Token_ID(TokenType.SYMBOL, ")"))],
         [Transition(4, NT.COMPOUND_STMT)],
     ],
     NT.TYPE_SPECIFIER: [
-        [Transition(1, T_ID(TokenType.KEYWORD, "int")), Transition(1, T_ID(TokenType.KEYWORD, "void"))],
+        [Transition(1, Token_ID(TokenType.KEYWORD, "int")), Transition(1, Token_ID(TokenType.KEYWORD, "void"))],
     ],
     NT.PARAMS: [
-        [Transition(1, T_ID(TokenType.KEYWORD, "int")), Transition(4, T_ID(TokenType.KEYWORD, "void"))],
+        [Transition(1, Token_ID(TokenType.KEYWORD, "int")), Transition(4, Token_ID(TokenType.KEYWORD, "void"))],
         [Transition(2, TokenType.ID)],
         [Transition(3, NT.PARAM_PRIME)],
         [Transition(4, NT.PARAM_LIST)],
     ],
     NT.PARAM_LIST: [
-        [Transition(1, T_ID(TokenType.SYMBOL, ",")), Transition(3, epsilon)],
+        [Transition(1, Token_ID(TokenType.SYMBOL, ",")), Transition(3, epsilon)],
         [Transition(2, NT.PARAM)],
         [Transition(3, NT.PARAM_LIST)],
     ],
@@ -526,14 +526,14 @@ T_DIAGRAMS: dict[NT, list[list[Transition]]] = {
         [Transition(2, NT.PARAM_PRIME)],
     ],
     NT.PARAM_PRIME: [
-        [Transition(1, T_ID(TokenType.SYMBOL, "[")), Transition(2, epsilon)],
-        [Transition(2, T_ID(TokenType.SYMBOL, "]"))],
+        [Transition(1, Token_ID(TokenType.SYMBOL, "[")), Transition(2, epsilon)],
+        [Transition(2, Token_ID(TokenType.SYMBOL, "]"))],
     ],
     NT.COMPOUND_STMT: [
-        [Transition(1, T_ID(TokenType.SYMBOL, "{"))],
+        [Transition(1, Token_ID(TokenType.SYMBOL, "{"))],
         [Transition(2, NT.DECLARATION_LIST)],
         [Transition(3, NT.STATEMENT_LIST)],
-        [Transition(4, T_ID(TokenType.SYMBOL, "}"))],
+        [Transition(4, Token_ID(TokenType.SYMBOL, "}"))],
     ],
     NT.STATEMENT_LIST: [
         [Transition(1, NT.STATEMENT), Transition(2, epsilon)],
@@ -549,49 +549,49 @@ T_DIAGRAMS: dict[NT, list[list[Transition]]] = {
         ]
     ],
     NT.EXPRESSION_STMT: [
-        [Transition(1, NT.EXPRESSION), Transition(1, T_ID(TokenType.KEYWORD, "break")),
-         Transition(2, T_ID(TokenType.SYMBOL, ";"))],
-        [Transition(2, T_ID(TokenType.SYMBOL, ";"))]
+        [Transition(1, NT.EXPRESSION), Transition(1, Token_ID(TokenType.KEYWORD, "break")),
+         Transition(2, Token_ID(TokenType.SYMBOL, ";"))],
+        [Transition(2, Token_ID(TokenType.SYMBOL, ";"))]
     ],
     NT.SELECTION_STMT: [
-        [Transition(1, T_ID(TokenType.KEYWORD, "if"))],
-        [Transition(2, T_ID(TokenType.SYMBOL, "("))],
+        [Transition(1, Token_ID(TokenType.KEYWORD, "if"))],
+        [Transition(2, Token_ID(TokenType.SYMBOL, "("))],
         [Transition(3, NT.EXPRESSION)],
-        [Transition(4, T_ID(TokenType.SYMBOL, ")"))],
+        [Transition(4, Token_ID(TokenType.SYMBOL, ")"))],
         [Transition(5, NT.STATEMENT)],
-        [Transition(6, T_ID(TokenType.KEYWORD, "else"))],
+        [Transition(6, Token_ID(TokenType.KEYWORD, "else"))],
         [Transition(7, NT.STATEMENT)],
     ],
     NT.ITERATION_STMT: [
-        [Transition(1, T_ID(TokenType.KEYWORD, "repeat"))],
+        [Transition(1, Token_ID(TokenType.KEYWORD, "repeat"))],
         [Transition(2, NT.STATEMENT)],
-        [Transition(3, T_ID(TokenType.KEYWORD, "until"))],
-        [Transition(4, T_ID(TokenType.SYMBOL, "("))],
+        [Transition(3, Token_ID(TokenType.KEYWORD, "until"))],
+        [Transition(4, Token_ID(TokenType.SYMBOL, "("))],
         [Transition(5, NT.EXPRESSION)],
-        [Transition(6, T_ID(TokenType.SYMBOL, ")"))],
+        [Transition(6, Token_ID(TokenType.SYMBOL, ")"))],
     ],
     NT.RETURN_STMT: [
-        [Transition(1, T_ID(TokenType.KEYWORD, "return"))],
+        [Transition(1, Token_ID(TokenType.KEYWORD, "return"))],
         [Transition(2, NT.RETURN_STMT_PRIME)]
     ],
     NT.RETURN_STMT_PRIME: [
-        [Transition(1, NT.EXPRESSION), Transition(2, T_ID(TokenType.SYMBOL, ";"))],
-        [Transition(2, T_ID(TokenType.SYMBOL, ";"))]
+        [Transition(1, NT.EXPRESSION), Transition(2, Token_ID(TokenType.SYMBOL, ";"))],
+        [Transition(2, Token_ID(TokenType.SYMBOL, ";"))]
     ],
     NT.EXPRESSION: [
         [Transition(1, TokenType.ID), Transition(2, NT.SIMPLE_EXPRESSION_ZEGOND)],
         [Transition(2, NT.B)]
     ],
     NT.B: [
-        [Transition(1, T_ID(TokenType.SYMBOL, "=")), Transition(2, T_ID(TokenType.SYMBOL, "[")),
+        [Transition(1, Token_ID(TokenType.SYMBOL, "=")), Transition(2, Token_ID(TokenType.SYMBOL, "[")),
          Transition(5, NT.SIMPLE_EXPRESSION_PRIME)],
         [Transition(5, NT.EXPRESSION)],
         [Transition(3, NT.EXPRESSION)],
-        [Transition(4, T_ID(TokenType.SYMBOL, "]"))],
+        [Transition(4, Token_ID(TokenType.SYMBOL, "]"))],
         [Transition(5, NT.H)],
     ],
     NT.H: [
-        [Transition(1, NT.G), Transition(3, T_ID(TokenType.SYMBOL, "="))],
+        [Transition(1, NT.G), Transition(3, Token_ID(TokenType.SYMBOL, "="))],
         [Transition(2, NT.D)],
         [Transition(4, NT.C)],
         [Transition(4, NT.EXPRESSION)]
@@ -609,7 +609,7 @@ T_DIAGRAMS: dict[NT, list[list[Transition]]] = {
         [Transition(2, NT.ADDITIVE_EXPRESSION)]
     ],
     NT.RELOP: [
-        [Transition(1, T_ID(TokenType.SYMBOL, "<")), Transition(1, T_ID(TokenType.SYMBOL, "=="))]
+        [Transition(1, Token_ID(TokenType.SYMBOL, "<")), Transition(1, Token_ID(TokenType.SYMBOL, "=="))]
     ],
     NT.ADDITIVE_EXPRESSION: [
         [Transition(1, NT.TERM)],
@@ -629,7 +629,7 @@ T_DIAGRAMS: dict[NT, list[list[Transition]]] = {
         [Transition(3, NT.D)],
     ],
     NT.ADDOP: [
-        [Transition(1, T_ID(TokenType.SYMBOL, "+")), Transition(1, T_ID(TokenType.SYMBOL, "-"))]
+        [Transition(1, Token_ID(TokenType.SYMBOL, "+")), Transition(1, Token_ID(TokenType.SYMBOL, "-"))]
     ],
     NT.TERM: [
         [Transition(1, NT.FACTOR)],
@@ -644,35 +644,35 @@ T_DIAGRAMS: dict[NT, list[list[Transition]]] = {
         [Transition(2, NT.G)]
     ],
     NT.G: [
-        [Transition(1, T_ID(TokenType.SYMBOL, "*")), Transition(3, epsilon)],
+        [Transition(1, Token_ID(TokenType.SYMBOL, "*")), Transition(3, epsilon)],
         [Transition(2, NT.FACTOR)],
         [Transition(3, NT.G)],
     ],
     NT.FACTOR: [
-        [Transition(1, T_ID(TokenType.SYMBOL, "(")), Transition(3, TokenType.ID), Transition(4, TokenType.NUM)],
+        [Transition(1, Token_ID(TokenType.SYMBOL, "(")), Transition(3, TokenType.ID), Transition(4, TokenType.NUM)],
         [Transition(2, NT.EXPRESSION)],
-        [Transition(4, T_ID(TokenType.SYMBOL, ")"))],
+        [Transition(4, Token_ID(TokenType.SYMBOL, ")"))],
         [Transition(4, NT.VAR_CALL_PRIME)]
     ],
     NT.VAR_CALL_PRIME: [
-        [Transition(1, T_ID(TokenType.SYMBOL, "(")), Transition(3, NT.VAR_PRIME)],
+        [Transition(1, Token_ID(TokenType.SYMBOL, "(")), Transition(3, NT.VAR_PRIME)],
         [Transition(2, NT.ARGS)],
-        [Transition(3, T_ID(TokenType.SYMBOL, ")"))]
+        [Transition(3, Token_ID(TokenType.SYMBOL, ")"))]
     ],
     NT.VAR_PRIME: [
-        [Transition(1, T_ID(TokenType.SYMBOL, "[")), Transition(3, epsilon)],
+        [Transition(1, Token_ID(TokenType.SYMBOL, "[")), Transition(3, epsilon)],
         [Transition(2, NT.EXPRESSION)],
-        [Transition(3, T_ID(TokenType.SYMBOL, "]"))]
+        [Transition(3, Token_ID(TokenType.SYMBOL, "]"))]
     ],
     NT.FACTOR_PRIME: [
-        [Transition(1, T_ID(TokenType.SYMBOL, "(")), Transition(3, epsilon)],
+        [Transition(1, Token_ID(TokenType.SYMBOL, "(")), Transition(3, epsilon)],
         [Transition(2, NT.ARGS)],
-        [Transition(3, T_ID(TokenType.SYMBOL, ")"))]
+        [Transition(3, Token_ID(TokenType.SYMBOL, ")"))]
     ],
     NT.FACTOR_ZEGOND: [
-        [Transition(1, T_ID(TokenType.SYMBOL, "(")), Transition(3, TokenType.NUM)],
+        [Transition(1, Token_ID(TokenType.SYMBOL, "(")), Transition(3, TokenType.NUM)],
         [Transition(2, NT.EXPRESSION)],
-        [Transition(3, T_ID(TokenType.SYMBOL, ")"))]
+        [Transition(3, Token_ID(TokenType.SYMBOL, ")"))]
     ],
     NT.ARGS: [
         [Transition(1, NT.ARG_LIST), Transition(1, epsilon)]
@@ -682,7 +682,7 @@ T_DIAGRAMS: dict[NT, list[list[Transition]]] = {
         [Transition(2, NT.ARG_LIST_PRIME)]
     ],
     NT.ARG_LIST_PRIME: [
-        [Transition(1, T_ID(TokenType.SYMBOL, ",")), Transition(3, epsilon)],
+        [Transition(1, Token_ID(TokenType.SYMBOL, ",")), Transition(3, epsilon)],
         [Transition(2, NT.EXPRESSION)],
         [Transition(3, NT.ARG_LIST_PRIME)],
     ]
