@@ -86,6 +86,8 @@ class State:
     def __init__(self, nonterminal, state):
         self.nonterminal = nonterminal
         self.state = state
+
+
 class Token_ID:
     type: TokenType
     lexeme: str
@@ -108,7 +110,7 @@ class Syntax_Error:
 
     def __str__(self):
         return f'#{self.line_num} : syntax error, {self.text}'
-    
+
 
 class Transition:
     dest_state: int
@@ -126,6 +128,3 @@ class LanguageRules:
     def __init__(self, first, follow):
         self.first = first
         self.follow = follow
-
-
-
